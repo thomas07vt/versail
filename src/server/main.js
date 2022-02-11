@@ -1,21 +1,22 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app, BrowserWindow } = require('electron');
 const { is } = require('electron-util');
-
 const path = require('path');
 
+const TrayGenerator = require('./TrayGenerator');
+
+let mainWindow = null;
+
 const createMainWindow = () => {
-  const mainWindow = new BrowserWindow({
-    backgroundColor: '#fff',
-    width: 500,
-    height: 250,
+  mainWindow = new BrowserWindow({
+    backgroundColor: '#FFF',
+    width: 250,
+    height: 150,
     webPreferences: {
       devTools: is.development,
       nodeIntegration: true,
-      backgroundThrottling: false
     }
   });
-
   if (is.development) {
     mainWindow.webContents.openDevTools({ mode: 'detach' });
     mainWindow.loadURL('http://localhost:3000');
@@ -26,4 +27,6 @@ const createMainWindow = () => {
 
 app.on('ready', () => {
   createMainWindow();
+  const Tray = new TrayGenerator(mainWindow);
+  Tray.createTray();
 });
